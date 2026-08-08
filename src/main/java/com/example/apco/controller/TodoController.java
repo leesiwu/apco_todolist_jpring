@@ -80,11 +80,12 @@ public class TodoController {
         return "index";
     }
     @GetMapping("/sorted")
-    public String sorted(Model model){
+    public String sorted(@RequestParam(required = false,defaultValue = "")String keyword ,Model model){
         model.addAttribute(
                 "todos",
                 todoService.findAllSorted()
         );
+        //비꿔야 할곳
         return "index";
     }
 
