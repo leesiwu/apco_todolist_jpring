@@ -85,7 +85,7 @@ public class TodoController {
                 "todos",
                 todoService.findAllSorted()
         );
-        //비꿔야 할곳
+        model.addAttribute("keyword",keyword);
         return "index";
     }
 
