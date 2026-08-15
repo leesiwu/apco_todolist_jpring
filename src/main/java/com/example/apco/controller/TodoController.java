@@ -74,20 +74,25 @@ public class TodoController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String word,Model model){
-        model.addAttribute("todos",todoService.search(word));
-        model.addAttribute("word",word);
-        return "index";
-    }
-    @GetMapping("/sorted")
-    public String sorted(@RequestParam(required = false,defaultValue = "")String keyword ,Model model){
-        model.addAttribute(
-                "todos",
-                todoService.findAllSorted()
-        );
+    public String search(@RequestParam String keyword,Model model){
+        String sortType = "dueDateAsc";
+        model.addAttribute("todos",todoService.searchAndSort(keyword,sortType));
         model.addAttribute("keyword",keyword);
         return "index";
     }
+    @GetMapping("/sort")
+    public String sort(@RequestParam(required = false,defaultValue = "")  String keyword
+            ,@RequestParam(defaultValue = "dueDateAsc") String sortType
+            , Model model){
+        model.addAttribute(
+                "todos",
+                todoService.searchAndSort(keyword,sortType)
+        );
+        model.addAttribute("keyword",keyword);
+        model.addAttribute("sortType",sortType);
+        return "index";
+    }
+
 
     // 중요도(priority), 마감일(duetime)
     // Todo entity에 priority,dueDate 필드 추가하기

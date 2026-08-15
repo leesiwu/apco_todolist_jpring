@@ -3,6 +3,7 @@ package com.example.apco.service;
 import com.example.apco.model.Todo;
 import com.example.apco.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -51,20 +52,18 @@ public class TodoService {
         }
         todoRepository.save(todo);
     }
-    public List<Todo> searchSorted(String keyword){
-        if(keyword == null || keyword.isBlank()){
-            return todoRepository.findAllByOrderByDueDateAsc();
-        }
-        return todoRepository.findByTextContainingOrderByDueDateAsc(keyword);
-    }
-    public List<Todo> search(String text){
-        if (text==null || text.isBlank()){
-            return todoRepository.findAll();
-        }
-        return todoRepository.findByTextContaining(text);
-    }
-    public List<Todo> findAllSorted(){
-        return todoRepository.findAllByOrderByDueDateAsc();
-    }
+    public List<Todo> searchAndSort(String keyword,String sortType){
+        Sort sort;
 
+        if("dueDateDesc".equals(sortType)){
+            sort=Sort.by(Sort.Direction.DESC,"dueDate");
+        }else if("latest".equals(sortType)){
+            sort=Sort.by(Sort.Direction.DESC,"id");
+        }else{
+            sort=Sort.by(Sort.Direction.ASC,"dueDate");
+        }
+        if(keyword==null || keyword.trim().isEmpty())
+            return todoRepository.findAll(sort);
+        return todoRepository.findByTextContaining(keyword.trim(),sort);
+    }
 }
