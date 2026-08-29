@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,16 +47,31 @@ public class TodoController {
     }
     //Delete
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String delete(@PathVariable Long id,
+                         @RequestParam(defaultValue = "")
+                         String keyword,
+                         @RequestParam(defaultValue = "dueDateAsc")
+                         String sortType,
+                         RedirectAttributes redirectAttributes){
     //todos.remove(id)
         todoService.deleteTodo(id);
+        redirectAttributes.addAttribute("keyword",keyword);
+        redirectAttributes.addAttribute("sortType",sortType);
         return "redirect:/";
     }
     //update
     @GetMapping("/toggle/{id}")
-    public String toggle(@PathVariable Long id){
+    public String toggle(@PathVariable Long id,
+        @RequestParam(defaultValue = "")
+        String keyword,
+        @RequestParam(defaultValue = "dueDateAsc")
+        String sortType,
+        RedirectAttributes redirectAttributes)
+        {
         todoService.toggleTodo(id);
-        return "redirect:/";
+        redirectAttributes.addAttribute("keyword",keyword);
+        redirectAttributes.addAttribute("sortType",sortType);
+        return "redirect:/sort";
     }
     //UPDATE(U)
     @GetMapping("/edit/{id}")
