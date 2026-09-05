@@ -18,6 +18,14 @@ import java.util.List;
 //JPA, H2
 @Controller
 public class TodoController {
+    private String redirectToList(
+            String keyword,
+            String sortType,
+            RedirectAttributes redirectAttributes){
+        redirectAttributes.addAttribute("keyword",keyword);
+        redirectAttributes.addAttribute("sortType",sortType);
+        return "redirect:/sort";
+    }
     private final TodoService todoService;
 
     public TodoController(TodoService todoService) {
@@ -46,21 +54,34 @@ public class TodoController {
         return "redirect:/";
     }
     //Delete
-    @GetMapping("/delete/{id}")
+    //1. POST /delete/3
+    //2. Todo 상태 변경(toggle,delete)
+    //3. 302 Redirect
+    //4. Get /sort?keyword
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id,
                          @RequestParam(defaultValue = "")
                          String keyword,
                          @RequestParam(defaultValue = "dueDateAsc")
                          String sortType,
                          RedirectAttributes redirectAttributes){
+        //get방ㅅ;ㄱ은 원칙적으로 ㄷㅔ이터를 '조회'하는 안전띠한 요청이여야함
+        //서버 상태를 변경하는 작업에는 사용하지 않는게좋다
+        //POST는 서벙ㅔ 데이터를 보내 상태 변경이나 부수 효과를 요청할때 사용데스
+
+        //먹럭 버기 = get
+        //검색 정렬 = get
+        //수정 화면 출력 = get
+        //Todo 추가 = POST
+        //Todo 수정 저장 = P0ST
+        //완료상태 변경 = POST
+        //Todo 삭제 = PDST
     //todos.remove(id)
         todoService.deleteTodo(id);
-        redirectAttributes.addAttribute("keyword",keyword);
-        redirectAttributes.addAttribute("sortType",sortType);
-        return "redirect:/";
+        return redirectToList(keyword,sortType,redirectAttributes);
     }
     //update
-    @GetMapping("/toggle/{id}")
+    @PostMapping("/toggle/{id}")
     public String toggle(@PathVariable Long id,
         @RequestParam(defaultValue = "")
         String keyword,
@@ -69,9 +90,7 @@ public class TodoController {
         RedirectAttributes redirectAttributes)
         {
         todoService.toggleTodo(id);
-        redirectAttributes.addAttribute("keyword",keyword);
-        redirectAttributes.addAttribute("sortType",sortType);
-        return "redirect:/sort";
+        return redirectToList(keyword,sortType,redirectAttributes);
     }
     //UPDATE(U)
     @GetMapping("/edit/{id}")
