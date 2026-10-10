@@ -94,18 +94,27 @@ public class TodoController {
     }
     //UPDATE(U)
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id,Model model){
+    public String editForm(@PathVariable Long id,Model model,
+    @RequestParam String keyword,
+                           @RequestParam(defaultValue = "dueDateAsc")
+                               String sortType){
         Todo todo=todoService.findById(id);
         model.addAttribute("todo",todo);
+        model.addAttribute("keyword",keyword);
+        model.addAttribute("sortType",sortType);
         return "edit";
     }
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable Long id,
                        @RequestParam String text,
+                       String keyword,
+                       @RequestParam(defaultValue = "dueDateAsc")
+                       String sortType,
                        @RequestParam String priority,
+                       RedirectAttributes redirectAttributes,
                        @RequestParam @DateTimeFormat(iso=DateTimeFormat.ISO.DATE)LocalDate dueDate) {
         todoService.updateTodo(id,text,priority,dueDate);
-        return "redirect:/";
+        return redirectToList(keyword,sortType,redirectAttributes);
     }
 
     @GetMapping("/search")

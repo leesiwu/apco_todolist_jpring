@@ -7,6 +7,16 @@
 <body>
 
     <h1>Todo List</h1>
+    <form action="/add" method="post">
+        <input type="text" name="text" placeholder="할 일 입력ㄱㄱ">
+        <select name="priority">
+            <option value="LOW">낮네용</option>
+            <option value="MEDIUM">애매하네용</option>
+            <option value="HIGH">위용위용</option>
+        </select>
+        <input type="date" name="dueDate" required>
+        <button type="submit">추가</button>
+    </form>
     <form action="/sort" method="get">
         <input type="text" name="keyword"
                th:value = "${keyword}">
@@ -58,8 +68,12 @@
            keyword POST from data
            sortType POST from data
            -->
-          <a th:href ="@{'/edit/' + ${todo.id}}">수정</a>
-          <a th:href ="@{/toggle/{id}(
+          <a th:href ="@{/edit/{id}(
+          id=${todo.id},
+          keyword=${keyword},
+          sortType=${sortType}
+          )}">수정</a>
+          <a th:href ="@{/edit/{id}(
           id=${todo.id},
           keyword=${keyword},
           sortType=${sortType}

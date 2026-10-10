@@ -8,6 +8,8 @@
         <h1>TODO 수정</h1>
 
         <form th:action="@{'/edit/' + ${todo.id}}" method = "post">
+            <input type="hidden" name="keyword" th:value ="${keyword}">
+            <input type="hidden" name="keyword" th:value ="${sortType}">
             <input type="text" name="text" th:value="${todo.text}" required>
             <select name = "priority">
                 <option value="LOW" th:selected="${todo.priority == 'LOW'}">낮음</option>
@@ -17,6 +19,7 @@
             <input type="date" name = "dueDate" th:value="${todo.dueDate}" required>
             <button type="submit">수정 완료</button>
         </form>
-        <a href="/">돌아가기</a>
+        <a th:href="/sort(keyword=${keyword},sortType=${sortType})">돌아가기</a>
     </body>
+
 </html>
