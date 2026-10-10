@@ -6,7 +6,7 @@ COPY  .  .
 RUN chmod +x gradlew
 RUN ./gradlew bootjar --no-daemon
 
-FROM eclipse-termurin:17-jre
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
