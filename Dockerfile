@@ -1,4 +1,4 @@
-FROM eclipse-termurin:17-jdw AS build
+FROM eclipse-temurin:17-jdw AS build
 WORKDIR /app
 
 COPY..
